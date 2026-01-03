@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import ChatAPIView, CallTranscriptionView, ClinicalSummaryView # <--- Import this
-from .views import setup_database # <--- Import the new function
 
 urlpatterns = [
     path('chat/', ChatAPIView.as_view(), name='chat_api'),
