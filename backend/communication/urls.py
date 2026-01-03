@@ -8,5 +8,4 @@ urlpatterns = [
     
     # New Endpoint for Doctor
     path('summary/<int:user_id>/', ClinicalSummaryView.as_view(), name='clinical_summary'),
-    path('setup-data/', setup_database, name='setup_data'),
 ]

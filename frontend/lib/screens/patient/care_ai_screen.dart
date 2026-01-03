@@ -11,7 +11,6 @@ import '../../constants/strings.dart';
 import '../../models/message_model.dart';
 import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:http_parser/http_parser.dart';
 
 class CareAIScreen extends StatefulWidget {
   const CareAIScreen({super.key});
@@ -193,40 +192,51 @@ class _CareAIScreenState extends State<CareAIScreen>
 
   // --- NEW UPLOAD FUNCTION (HANDLES BYTES) ---
   Future<void> _uploadAudioBytes(List<int> bytes) async {
+    // Show loading state
     _messageController.text = "Transcribing...";
     
     try {
+      // 1. Define Backend URL
+      // Use 127.0.0.1 for Web, 10.0.2.2 for Android Emulator
       const String apiUrl = 'https://carebridge-backend-42d7.onrender.com/api/communication/transcribe/';
+      
       var uri = Uri.parse(apiUrl); 
       var request = http.MultipartRequest('POST', uri);
       
-      // FIX: Explicitly set the Content-Type to audio/wav
+      // 2. Attach Audio Data from Memory
+      // Note: We use 'fromBytes' instead of 'fromPath'
+      // Filename is vital for the backend to know how to handle it. 
+      // 'audio.wav' is safe for PCM16bit.
       request.files.add(
         http.MultipartFile.fromBytes(
           'audio', 
           bytes, 
-          filename: 'audio.wav',
-          contentType: MediaType('audio', 'wav'), // <--- ADD THIS
+          filename: 'audio.wav' 
         )
       );
 
+      // 3. Send
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final transcript = data['transcript'];
+        
         setState(() {
-          _messageController.text = data['transcript'];
+          _messageController.text = transcript;
         });
-        // Auto-send the transcribed text to Gemini
-        _sendMessage(data['transcript']); 
+        
+        // Optional: Auto-send after a delay
+        // Future.delayed(Duration(seconds: 1), () => _sendMessage(transcript));
+        
       } else {
         print("Backend Error: ${response.body}");
-        _messageController.text = "Error: Transcription failed (${response.statusCode})";
+        _messageController.text = "Error: Transcription failed";
       }
     } catch (e) {
-      print("Connection Error: $e");
       _messageController.text = "Error: Connection failed";
+      print("Connection Error: $e");
     }
   }
 

@@ -14,9 +14,6 @@ from .models import ChatMessage, CallLog
 from .serializers import ChatMessageSerializer
 from patients.models import PatientProfile
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from django.http import JsonResponse
-from .models import PatientProfile
 
 # --- AI SDK Imports ---
 import google.generativeai as genai
@@ -235,34 +232,3 @@ class ClinicalSummaryView(APIView):
             })
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-
-def setup_database(request):
-    # 1. Create Superuser (if not exists)
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-        admin_msg = "Superuser 'admin' created (password: admin123)."
-    else:
-        admin_msg = "Superuser 'admin' already exists."
-
-    # 2. Create Patient User (if not exists)
-    if not User.objects.filter(username='patient1').exists():
-        p_user = User.objects.create_user('patient1', 'patient@example.com', 'patient123')
-        
-        # 3. Create Patient Profile for ID #1 (or whatever ID connects to it)
-        PatientProfile.objects.create(
-            user=p_user,
-            caregiver_name="Sarah",
-            medical_conditions="Hypertension",
-            current_status="Stable",
-            current_mood="Neutral"
-        )
-        patient_msg = "Patient 'patient1' and Profile created."
-    else:
-        patient_msg = "Patient 'patient1' already exists."
-
-    return JsonResponse({
-        "status": "success", 
-        "admin": admin_msg, 
-        "patient": patient_msg
-    })
