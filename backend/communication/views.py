@@ -16,6 +16,7 @@ from patients.models import PatientProfile
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from .models import PatientProfile
 
 # --- AI SDK Imports ---
 import google.generativeai as genai
