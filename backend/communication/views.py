@@ -236,32 +236,32 @@ class ClinicalSummaryView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-def setup_database(request):
-    # 1. Create Superuser (if not exists)
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-        admin_msg = "Superuser 'admin' created (password: admin123)."
-    else:
-        admin_msg = "Superuser 'admin' already exists."
+# backend/communication/views.py
 
-    # 2. Create Patient User (if not exists)
-    if not User.objects.filter(username='patient1').exists():
-        p_user = User.objects.create_user('patient1', 'patient@example.com', 'patient123')
+def setup_database(request):
+    # 1. Create the specific user 'Paras'
+    if not User.objects.filter(username='Paras').exists():
+        user = User.objects.create_user('Paras', 'paras@gmail.com', '123456')
+        msg_user = "User 'Paras' created successfully."
         
-        # 3. Create Patient Profile for ID #1 (or whatever ID connects to it)
+        # 2. Link a Patient Profile to Paras (CRITICAL for Dashboard)
+        # Import PatientProfile from wherever it is defined (e.g. patients.models)
+        from patients.models import PatientProfile 
+        
         PatientProfile.objects.create(
-            user=p_user,
-            caregiver_name="Sarah",
-            medical_conditions="Hypertension",
+            user=user,
+            caregiver_name="Mom",
+            medical_conditions="None",
             current_status="Stable",
-            current_mood="Neutral"
+            current_mood="Happy"
         )
-        patient_msg = "Patient 'patient1' and Profile created."
+        msg_profile = "Patient Profile for 'Paras' created."
     else:
-        patient_msg = "Patient 'patient1' already exists."
+        msg_user = "User 'Paras' already exists."
+        msg_profile = "Profile already exists."
 
     return JsonResponse({
-        "status": "success", 
-        "admin": admin_msg, 
-        "patient": patient_msg
+        "status": "success",
+        "user_action": msg_user,
+        "profile_action": msg_profile
     })
