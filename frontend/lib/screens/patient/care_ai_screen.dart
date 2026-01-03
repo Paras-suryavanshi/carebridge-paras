@@ -1,4 +1,3 @@
-import 'package:http_parser/http_parser.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -12,6 +11,7 @@ import '../../constants/strings.dart';
 import '../../models/message_model.dart';
 import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http_parser/http_parser.dart';
 
 class CareAIScreen extends StatefulWidget {
   const CareAIScreen({super.key});
