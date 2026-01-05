@@ -1,17 +1,21 @@
-# --- Core Framework ---
-Django>=5.0.0
+# --- Core Django ---
+Django>=5.0
 djangorestframework
 django-cors-headers
 
-# --- Image Handling (Required for User Avatars) ---
-Pillow>=10.0.0
+# --- AI & Cloud Services ---
+google-generativeai      # For Gemini Chat
+azure-cognitiveservices-speech  # For Voice-to-Text
+azure-ai-textanalytics   # For Sentiment/Mood (if you used this)
+requests                 # Helper for HTTP calls
 
-# --- Security & Config ---
-python-dotenv          # Required to read .env files for API keys
+# --- Configuration & Security ---
+python-dotenv            # To read .env files
+django-environ           # (Optional but good) Helper for env vars
 
-# --- AI & Speech Services ---
-azure-cognitiveservices-speech  # Required for your Voice-to-Text feature
-google-generativeai             # Required for Gemini Chat and Clinical Summaries
+# --- Database (Render Requirement) ---
+dj-database-url          # Connects Django to Render's DB URL
+psycopg2-binary          # PostgreSQL Adapter
 
-# --- Deployment (Render) ---
-gunicorn               # Required! This is the production server Render uses to run Django
+# --- Production Server (Render Requirement) ---
+gunicorn                 # The web server that runs Django in production
