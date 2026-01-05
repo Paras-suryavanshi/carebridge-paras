@@ -2,6 +2,7 @@
 Django>=5.0
 djangorestframework
 django-cors-headers
+Pillow                  # For image handling (avatars)
 
 # --- AI & Cloud Services ---
 google-generativeai      # For Gemini Chat
